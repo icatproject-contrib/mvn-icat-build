@@ -5,10 +5,18 @@ RUN zypper --non-interactive install \
 	less \
 	mariadb-client \
 	maven \
-	mysql-connector-java \
 	python-base \
 	python-xml \
 	unzip
+
+# The distributed mysql-connector-java in opensuse:15.3 does not work
+# with java-1_8_0-openjdk any more.  (A bug?)  Use the RPM from
+# opensuse:42.3 instead.
+COPY mysql-connector-java-5.1.42-10.3.1.noarch.rpm /tmp
+RUN zypper --non-interactive install \
+	/tmp/mysql-connector-java-5.1.42-10.3.1.noarch.rpm && \
+    zypper --non-interactive addlock mysql-connector-java && \
+    rm /tmp/mysql-connector-java-5.1.42-10.3.1.noarch.rpm
 
 RUN groupadd abuild && \
     useradd -g abuild -c "Build user" -d /home/abuild abuild && \
