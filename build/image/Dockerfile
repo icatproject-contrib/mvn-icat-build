@@ -36,4 +36,4 @@ RUN tmpfile=`mktemp` && \
     rm -rf $tmpfile && \
     asadmin delete-domain domain1
 
-CMD ["bash"]
+CMD ["start-glassfish.sh"]

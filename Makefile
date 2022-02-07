@@ -7,11 +7,14 @@ build:
 	sudo docker-compose pull
 	sudo docker-compose build --pull
 
-run: set-owner
-	sudo docker-compose run --rm build
+up: set-owner
+	sudo docker-compose up -d
 
 down:
 	sudo docker-compose down -v
+
+run: up
+	sudo docker-compose exec build bash
 
 set-owner:
 	sudo chown -R '1000:1000' build/apps build/src
@@ -26,4 +29,4 @@ build/apps:
 build/src:
 	mkdir $@
 
-.PHONY: install build run down set-owner reset-owner
+.PHONY: install build up down run set-owner reset-owner
