@@ -6,6 +6,7 @@ services:
     image: rkrahl/mariadb
     volumes:
       - ./mysql/init:/etc/mysql.d:ro
+      - db:/var/lib/mysql
 
   build:
     build:
@@ -16,3 +17,9 @@ services:
       - ./build/my.cnf:/home/abuild/.my.cnf:ro
       - ./build/apps:/home/abuild/apps
       - ./build/src:/home/abuild/src
+      - gfdomain:/home/abuild/payara5/glassfish/domains
+
+
+volumes:
+  db:
+  gfdomain:
