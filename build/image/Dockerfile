@@ -12,10 +12,11 @@ RUN zypper --non-interactive install \
 
 RUN groupadd abuild && \
     useradd -g abuild -c "Build user" -d /home/abuild abuild && \
-    mkdir -p /home/abuild/bin
+    mkdir -p /home/abuild/.m2 /home/abuild/bin /home/abuild/test
 
 COPY start-glassfish.sh /home/abuild/bin
 COPY add-test-accounts.sh /home/abuild/bin
+COPY m2-settings.xml /home/abuild/.m2/settings.xml
 
 RUN chmod 0755 \
 	/home/abuild/bin/add-test-accounts.sh \

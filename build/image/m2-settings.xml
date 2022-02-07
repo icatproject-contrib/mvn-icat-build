@@ -1,0 +1,15 @@
+<settings>
+    <profiles>
+        <profile>
+            <activation>
+                <activeByDefault>true</activeByDefault>
+            </activation>
+            <properties>
+                <serverUrl>http://localhost:8080</serverUrl>
+                <luceneUrl>http://localhost:8080</luceneUrl>
+                <containerHome>/home/abuild/payara5</containerHome>
+                <testHome>/home/abuild/test</testHome>
+            </properties>
+        </profile>
+    </profiles>
+</settings>
