@@ -14,8 +14,11 @@ RUN groupadd abuild && \
     mkdir -p /home/abuild/bin
 
 COPY start-glassfish.sh /home/abuild/bin
+COPY add-test-accounts.sh /home/abuild/bin
 
-RUN chmod 0755 /home/abuild/bin/start-glassfish.sh && \
+RUN chmod 0755 \
+	/home/abuild/bin/add-test-accounts.sh \
+	/home/abuild/bin/start-glassfish.sh && \
     chown -R abuild:abuild /home/abuild
 
 ENV JAVA_HOME /usr/lib64/jvm/java-11-openjdk
