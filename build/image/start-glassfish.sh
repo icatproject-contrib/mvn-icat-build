@@ -21,7 +21,11 @@ glassfish_init() {
     asadmin set server.ejb-container.property.disable-nonportable-jndi-names="true"
     asadmin set configs.config.server-config.network-config.protocols.protocol.http-listener-2.http.request-timeout-seconds=-1
 
-    mkdir $DOMAINDIR/data
+    mkdir -p \
+	$DOMAINDIR/data/icat \
+	$DOMAINDIR/data/icat/lucene \
+	$DOMAINDIR/data/ids \
+	$DOMAINDIR/data/lucene
 }
 
 if [[ ! -d $DOMAINDIR ]]; then
