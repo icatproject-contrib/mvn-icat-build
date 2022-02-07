@@ -2,6 +2,7 @@ FROM rkrahl/opensuse:15.3
 
 RUN zypper --non-interactive install \
 	java-devel-openjdk \
+	less \
 	mariadb-client \
 	maven \
 	mysql-connector-java \
