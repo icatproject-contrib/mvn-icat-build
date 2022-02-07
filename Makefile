@@ -1,4 +1,4 @@
-CONF_REPO = git@github.com:icatproject-contrib/icat-config.git
+CONF_REPO = git@gitlab.helmholtz-berlin.de:icat/icat-config.git
 LOCAL_USER = $(shell id -u)
 
 install: build/apps build/src
@@ -23,7 +23,7 @@ reset-owner:
 	sudo chown -R $(LOCAL_USER) build/apps build/src
 
 build/apps:
-	git clone $(CONF_REPO) $@
+	git clone --branch site/hzb/testing/build $(CONF_REPO) $@
 	$(MAKE) -C $@ unpack
 
 build/src:
