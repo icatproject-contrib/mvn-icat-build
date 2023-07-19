@@ -25,6 +25,9 @@ glassfish_init() {
 	$DOMAINDIR/data/icat \
 	$DOMAINDIR/data/icat/lucene \
 	$DOMAINDIR/data/ids \
+	$DOMAINDIR/data/ids/archive \
+	$DOMAINDIR/data/ids/cache \
+	$DOMAINDIR/data/ids/main \
 	$DOMAINDIR/data/lucene
 }
 
