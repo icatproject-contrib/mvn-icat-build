@@ -30,6 +30,10 @@ COPY m2-settings.xml /home/abuild/.m2/settings.xml
 RUN chmod 0755 \
 	/home/abuild/bin/add-test-accounts.sh \
 	/home/abuild/bin/start-glassfish.sh && \
+    mkdir -p \
+	/home/abuild/test/data/ids/archive \
+	/home/abuild/test/data/ids/cache \
+	/home/abuild/test/data/ids/main && \
     chown -R abuild:abuild /home/abuild
 
 ENV JAVA_HOME /usr/lib64/jvm/java-1.8.0-openjdk
