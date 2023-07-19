@@ -1,6 +1,7 @@
 FROM rkrahl/opensuse:15.3
 
 RUN zypper --non-interactive install \
+	acl \
 	java-1_8_0-openjdk-devel \
 	less \
 	mariadb-client \
