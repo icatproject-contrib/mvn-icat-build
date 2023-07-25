@@ -73,8 +73,8 @@ run docker commands.
    to start an interactive shell inside the Payara container.
 
 7. Deploy ICAT components that you need to have running in the Payara
-   container as a prerequisite of you the build.  If, for instance,
-   you want to build icat.server at version 5.0.1, you may run::
+   container as a prerequisite of the build.  If, for instance, you
+   want to build icat.server at version 5.0.1, you may run::
 
      $ (cd apps/authn.simple && ./setup install)
      $ (cd apps/authn.db && ./setup install)
