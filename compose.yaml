@@ -17,7 +17,7 @@ services:
       - ./build/my.cnf:/home/abuild/.my.cnf:ro
       - ./build/apps:/home/abuild/apps
       - ./build/src:/home/abuild/src
-      - gfdomain:/home/abuild/payara41/glassfish/domains
+      - gfdomain:/home/abuild/payara6/glassfish/domains
 
 
 volumes:

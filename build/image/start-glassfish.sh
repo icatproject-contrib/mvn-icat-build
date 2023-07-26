@@ -13,7 +13,7 @@ glassfish_init() {
     asadmin --passwordfile $pwfile --user admin \
 	create-domain --savelogin $domainname
     rm -f $pwfile
-    ln -s /usr/share/java/mysql-connector-java.jar $DOMAINDIR/lib
+    ln -s /usr/share/java/mysql-connector-j.jar $DOMAINDIR/lib
     asadmin start-domain $domainname
     asadmin set server.http-service.access-log.format="common"
     asadmin set server.http-service.access-logging-enabled=true
