@@ -23,7 +23,7 @@ reset-owner:
 	sudo chown -R $(LOCAL_USER) build/apps build/src
 
 build/apps:
-	git clone --branch testing/mvn-icat-build/payara4 $(CONF_REPO) $@
+	git clone --branch testing/mvn-icat-build/payara6 $(CONF_REPO) $@
 	$(MAKE) -C $@ unpack
 
 build/src:
