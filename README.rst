@@ -58,12 +58,12 @@ run docker commands.
 
 5. Check out the sources of the ICAT component you want to work on
    into ``build/src``.  If, for instance, you want to build
-   icat.server at version 5.0.1, you may run::
+   icat.server at version 6.0.0, you may run::
 
      $ pushd build/src
      $ git clone git@github.com:icatproject/icat.server.git
      $ cd icat.server
-     $ git checkout v5.0.1
+     $ git checkout v6.0.0
      $ popd
 
 6. Run::
@@ -74,7 +74,7 @@ run docker commands.
 
 7. Deploy ICAT components that you need to have running in the Payara
    container as a prerequisite of the build.  If, for instance, you
-   want to build icat.server at version 5.0.1, you may run::
+   want to build icat.server at version 6.0.0, you may run::
 
      $ (cd apps/authn.simple && ./setup install)
      $ (cd apps/authn.db && ./setup install)
@@ -107,9 +107,7 @@ run docker commands.
 Java and Payara version
 ~~~~~~~~~~~~~~~~~~~~~~~
 
-This build environment provides Java 8 and Payara 4.1.  Admittedly,
-this is rather old.  But some ICAT components still need Java 8 to
-build.
+This build environment provides Java 11 and Payara 6.
 
 
 Copyright and License
