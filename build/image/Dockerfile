@@ -2,10 +2,12 @@ FROM rkrahl/opensuse:15.3
 
 RUN zypper --non-interactive install \
 	acl \
+	git \
 	java-1_8_0-openjdk-devel \
 	less \
 	mariadb-client \
 	maven \
+	openssh \
 	python-base \
 	python-xml \
 	unzip
