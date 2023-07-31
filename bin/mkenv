@@ -2,7 +2,19 @@
 
 maindir=$(cd $(dirname $(dirname $0)); pwd)
 
+if test -n "$SSH_AUTH_SOCK"
+then
+    SSH_AUTH_DIR=$(dirname $SSH_AUTH_SOCK)
+else
+    # Create a dummy SSH agent directory to make the compose file happy
+    SSH_AUTH_DIR=$(mktemp -d -p /tmp ssh-XXXXXXXXXXXX)
+    SSH_AUTH_SOCK=""
+fi
+
+
 cat > $maindir/.env <<EOF
 COMPOSE_FILE=compose.yaml
 COMPOSE_PROJECT_NAME=mvn
+SSH_AUTH_DIR=$SSH_AUTH_DIR
+SSH_AUTH_SOCK=$SSH_AUTH_SOCK
 EOF

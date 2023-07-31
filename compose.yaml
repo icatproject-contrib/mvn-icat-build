@@ -17,7 +17,10 @@ services:
       - ./build/my.cnf:/home/abuild/.my.cnf:ro
       - ./build/apps:/home/abuild/apps
       - ./build/src:/home/abuild/src
+      - $SSH_AUTH_DIR:$SSH_AUTH_DIR
       - gfdomain:/home/abuild/payara41/glassfish/domains
+    environment:
+      SSH_AUTH_SOCK:
 
 
 volumes:
