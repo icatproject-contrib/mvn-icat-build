@@ -28,7 +28,7 @@ ENV LC_ALL en_US.UTF-8
 RUN groupadd abuild && \
     useradd -g abuild -c "Build user" -d /home/abuild abuild && \
     mkdir -p \
-	/home/abuild/.m2 \
+	/home/abuild \
 	/opt/payara41 \
 	/opt/payara41/bin \
 	/opt/payara41/test/data/ids/archive \
@@ -37,7 +37,6 @@ RUN groupadd abuild && \
 
 COPY start-glassfish.sh /opt/payara41/bin
 COPY add-test-accounts.sh /opt/payara41/bin
-COPY m2-settings.xml /home/abuild/.m2/settings.xml
 
 RUN chmod 0755 \
 	/opt/payara41/bin/add-test-accounts.sh \

@@ -12,6 +12,7 @@ up: env set-owner
 
 down: env
 	sudo docker-compose down -v
+	bash -c '. .env && rm -rf $$BUILDHOME'
 
 run: env up
 	sudo docker-compose exec build bash

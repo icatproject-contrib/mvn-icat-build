@@ -11,10 +11,33 @@ else
     SSH_AUTH_SOCK=""
 fi
 
+user_run=/run/user/$(id -u)
+if test -d $user_run
+then
+    BUILDHOME=$user_run/mvn-icat-build
+    mkdir -p $BUILDHOME
+else
+    BUILDHOME=$(mktemp -d -p /tmp mvn-icat-build-XXXXXXXX)
+fi
+if test -z "$(ls -A $BUILDHOME)"
+then
+    mkdir $BUILDHOME/.m2 $BUILDHOME/.ssh
+    cp -p build/home/bashrc $BUILDHOME/.bashrc
+    cp -p build/home/m2-settings.xml $BUILDHOME/.m2/settings.xml
+    cp -p build/home/my.cnf $BUILDHOME/.my.cnf
+    cp -p build/home/ssh-config $BUILDHOME/.ssh/config
+    cp -p build/home/ssh-host-github $BUILDHOME/.ssh/known_hosts
+    chmod go-rwx $BUILDHOME/.ssh
+    test -f $HOME/.gitconfig && cp -p $HOME/.gitconfig $BUILDHOME
+    ln -s /opt/payara41/bin $BUILDHOME/bin
+fi
+sudo chown -R '1000:1000' $BUILDHOME
+
 
 cat > $maindir/.env <<EOF
 COMPOSE_FILE=compose.yaml
 COMPOSE_PROJECT_NAME=mvn
+BUILDHOME=$BUILDHOME
 SSH_AUTH_DIR=$SSH_AUTH_DIR
 SSH_AUTH_SOCK=$SSH_AUTH_SOCK
 EOF

@@ -14,7 +14,7 @@ services:
     depends_on:
       - mysql
     volumes:
-      - ./build/my.cnf:/home/abuild/.my.cnf:ro
+      - $BUILDHOME:/home/abuild
       - ./build/apps:/home/abuild/apps
       - ./build/src:/home/abuild/src
       - $SSH_AUTH_DIR:$SSH_AUTH_DIR
