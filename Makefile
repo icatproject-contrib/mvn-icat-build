@@ -3,17 +3,17 @@ LOCAL_USER = $(shell id -u)
 
 install: build/apps build/src
 
-build:
+build: env
 	sudo docker-compose pull
 	sudo docker-compose build --pull
 
-up: set-owner
+up: env set-owner
 	sudo docker-compose up -d
 
-down:
+down: env
 	sudo docker-compose down -v
 
-run: up
+run: env up
 	sudo docker-compose exec build bash
 
 set-owner:
@@ -22,6 +22,9 @@ set-owner:
 reset-owner:
 	sudo chown -R $(LOCAL_USER) build/apps build/src
 
+env:
+	bin/mkenv
+
 build/apps:
 	git clone --branch testing/mvn-icat-build/payara4 $(CONF_REPO) $@
 	$(MAKE) -C $@ unpack
@@ -29,4 +32,4 @@ build/apps:
 build/src:
 	mkdir $@
 
-.PHONY: install build up down run set-owner reset-owner
+.PHONY: install build up down run set-owner reset-owner env

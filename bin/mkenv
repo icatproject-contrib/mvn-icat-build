@@ -1,0 +1,8 @@
+#! /bin/bash
+
+maindir=$(cd $(dirname $(dirname $0)); pwd)
+
+cat > $maindir/.env <<EOF
+COMPOSE_FILE=compose.yaml
+COMPOSE_PROJECT_NAME=mvn
+EOF
