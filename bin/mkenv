@@ -1,43 +1,62 @@
-#! /bin/bash
+#! /usr/bin/python3
 
-maindir=$(cd $(dirname $(dirname $0)); pwd)
+import os
+from pathlib import Path
+from shutil import copyfile
+from socket import getfqdn
+import subprocess
+from tempfile import mkdtemp
 
-if test -n "$SSH_AUTH_SOCK"
-then
-    SSH_AUTH_DIR=$(dirname $SSH_AUTH_SOCK)
-else
+maindir = Path(__file__).resolve().parent.parent
+env_file = maindir / '.env'
+home_src_dir = maindir / 'build' / 'home'
+glassfish_home = Path('/opt/payara41')
+
+try:
+    ssh_auth_sock = os.environ['SSH_AUTH_SOCK']
+except KeyError:
     # Create a dummy SSH agent directory to make the compose file happy
-    SSH_AUTH_DIR=$(mktemp -d -p /tmp ssh-XXXXXXXXXXXX)
-    SSH_AUTH_SOCK=""
-fi
+    ssh_auth_dir = mkdtemp(prefix="ssh-")
+    ssh_auth_sock = ""
+else:
+    ssh_auth_dir = str(Path(ssh_auth_sock).parent)
 
-user_run=/run/user/$(id -u)
-if test -d $user_run
-then
-    BUILDHOME=$user_run/mvn-icat-build
-    mkdir -p $BUILDHOME
-else
-    BUILDHOME=$(mktemp -d -p /tmp mvn-icat-build-XXXXXXXX)
-fi
-if test -z "$(ls -A $BUILDHOME)"
-then
-    mkdir $BUILDHOME/.m2 $BUILDHOME/.ssh
-    cp -p build/home/bashrc $BUILDHOME/.bashrc
-    cp -p build/home/m2-settings.xml $BUILDHOME/.m2/settings.xml
-    cp -p build/home/my.cnf $BUILDHOME/.my.cnf
-    cp -p build/home/ssh-config $BUILDHOME/.ssh/config
-    cp -p build/home/ssh-host-github $BUILDHOME/.ssh/known_hosts
-    chmod go-rwx $BUILDHOME/.ssh
-    test -f $HOME/.gitconfig && cp -p $HOME/.gitconfig $BUILDHOME
-    ln -s /opt/payara41/bin $BUILDHOME/bin
-fi
-sudo chown -R '1000:1000' $BUILDHOME
+def mkhome():
+    home_files = [
+        ('bashrc', '.bashrc'),
+        ('m2-settings.xml', '.m2/settings.xml'),
+        ('my.cnf', '.my.cnf'),
+        ('ssh-config', '.ssh/config'),
+        ('ssh-host-github', '.ssh/known_hosts'),
+    ]
+    user_run_dir = Path("/run/user") / str(os.getuid())
+    if user_run_dir.is_dir():
+        home = user_run_dir / "mvn-icat-build"
+        home.mkdir(mode=0o700, exist_ok=True)
+    else:
+        home = mkdtemp(prefix="mvn-icat-build-")
+    if not any(home.iterdir()):
+        (home / '.m2').mkdir()
+        (home / '.ssh').mkdir(mode=0o700)
+        for src, dest in home_files:
+            copyfile(str(home_src_dir / src), str(home / dest))
+        gitconfig = Path.home() / '.gitconfig'
+        if gitconfig.exists():
+            copyfile(str(gitconfig), str(home / '.gitconfig'))
+        (home / 'bin').symlink_to(glassfish_home / 'bin')
+    subprocess.run(['sudo', 'chown', '-R', '1000:1000', str(home)], check=True)
+    return home
 
+cfg = {
+    'COMPOSE_FILE': 'compose.yaml',
+    'COMPOSE_PROJECT_NAME': 'mvn',
+    'BUILDHOME': mkhome(),
+    'GLASSFISH_HOME': glassfish_home,
+    'HOSTNAME': getfqdn(),
+    'SSH_AUTH_DIR': ssh_auth_dir,
+    'SSH_AUTH_SOCK': ssh_auth_sock,
+}
 
-cat > $maindir/.env <<EOF
-COMPOSE_FILE=compose.yaml
-COMPOSE_PROJECT_NAME=mvn
-BUILDHOME=$BUILDHOME
-SSH_AUTH_DIR=$SSH_AUTH_DIR
-SSH_AUTH_SOCK=$SSH_AUTH_SOCK
-EOF
+with env_file.open('wt') as f:
+    for k in cfg:
+        print("%s=%s" % (k, cfg[k]), file=f)
