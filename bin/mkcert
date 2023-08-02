@@ -1,0 +1,30 @@
+#! /bin/sh
+
+maindir=$(cd $(dirname $0)/..; pwd)
+
+. $maindir/.env
+
+wd=$maindir/build/certs
+mkdir -p $wd
+cd $wd
+
+cat <<EOF > openssl.cnf
+[ req ]
+prompt                  = no
+default_bits            = 2048
+distinguished_name      = dn
+string_mask             = utf8only
+x509_extensions         = v3_req
+
+[ dn ]
+CN = $HOSTNAME
+
+[ v3_req ]
+subjectAltName = DNS:localhost, DNS:build, DNS:$HOSTNAME
+EOF
+
+openssl req -newkey rsa:2048 -nodes -x509 -sha256 -days 1826 \
+     -out cert.pem -keyout key.pem -config openssl.cnf
+chmod go-rwx key.pem
+
+ln -s cert.pem rootcert.pem

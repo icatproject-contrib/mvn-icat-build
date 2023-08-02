@@ -7,7 +7,7 @@ build: env
 	sudo docker-compose pull
 	sudo docker-compose build --pull
 
-up: env set-owner
+up: env cert set-owner
 	sudo docker-compose up -d
 
 down: env
@@ -17,14 +17,21 @@ down: env
 run: env up
 	sudo docker-compose exec build bash
 
-set-owner:
+set-owner: cert
 	sudo chown -R '1000:1000' build/apps build/src
+	sudo chown -h '1000:1000' build/certs/*.pem
 
-reset-owner:
+reset-owner: cert
 	sudo chown -R $(LOCAL_USER) build/apps build/src
+	sudo chown -h $(LOCAL_USER) build/certs/*.pem
 
 env:
 	bin/mkenv
+
+cert: build/certs/cert.pem
+
+build/certs/cert.pem:
+	bin/mkcert
 
 build/apps:
 	git clone --branch testing/mvn-icat-build/payara4 $(CONF_REPO) $@
@@ -33,4 +40,4 @@ build/apps:
 build/src:
 	mkdir $@
 
-.PHONY: install build up down run set-owner reset-owner env
+.PHONY: install build up down run set-owner reset-owner env cert

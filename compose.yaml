@@ -17,6 +17,7 @@ services:
       - $BUILDHOME:/home/abuild
       - ./build/apps:/home/abuild/apps
       - ./build/src:/home/abuild/src
+      - ./build/certs:${GLASSFISH_HOME}/certs
       - $SSH_AUTH_DIR:$SSH_AUTH_DIR
       - gfdomain:${GLASSFISH_HOME}/glassfish/domains
     environment:
