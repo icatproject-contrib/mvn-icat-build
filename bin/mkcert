@@ -20,7 +20,7 @@ x509_extensions         = v3_req
 CN = $HOSTNAME
 
 [ v3_req ]
-subjectAltName = DNS:localhost, DNS:build, DNS:$HOSTNAME
+subjectAltName = DNS:localhost, DNS:build, DNS:payara, DNS:$HOSTNAME
 EOF
 
 openssl req -newkey rsa:2048 -nodes -x509 -sha256 -days 1826 \
