@@ -1,0 +1,1 @@
+alias la='env --unset=LC_ALL LC_COLLATE=C ls -la -N --color=tty -T 0'

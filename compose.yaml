@@ -14,10 +14,17 @@ services:
     depends_on:
       - mysql
     volumes:
-      - ./build/my.cnf:/home/abuild/.my.cnf:ro
+      - $BUILDHOME:/home/abuild
       - ./build/apps:/home/abuild/apps
       - ./build/src:/home/abuild/src
-      - gfdomain:/home/abuild/payara41/glassfish/domains
+      - $SSH_AUTH_DIR:$SSH_AUTH_DIR
+      - gfdomain:${GLASSFISH_HOME}/glassfish/domains
+    environment:
+      SSH_AUTH_SOCK:
+    networks:
+      default:
+        aliases:
+          - payara
 
 
 volumes:
