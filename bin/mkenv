@@ -53,6 +53,15 @@ def mkhome(user):
         if gitconfig.exists():
             copyfile(str(gitconfig), str(home / '.gitconfig'))
         (home / 'bin').symlink_to(glassfish_home / 'bin')
+        try:
+            lt = Path('/etc/localtime')
+            zi = Path('/usr/share/zoneinfo/')
+            tzname = str(lt.resolve().relative_to(zi))
+        except ValueError:
+            pass
+        else:
+            with (home / '.bashrc').open('at') as f:
+                print("export TZ=%s" % tzname, file=f)
     if user:
         # Substitute username and password in .m2/settings.xml.
         # Import keyring here, so that the rest of the script does not
