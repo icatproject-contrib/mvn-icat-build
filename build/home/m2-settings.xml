@@ -5,8 +5,8 @@
                 <activeByDefault>true</activeByDefault>
             </activation>
             <properties>
-                <serverUrl>http://localhost:8080</serverUrl>
-                <luceneUrl>http://localhost:8080</luceneUrl>
+                <serverUrl>https://payara:8181</serverUrl>
+                <luceneUrl>https://payara:8181</luceneUrl>
                 <containerHome>/opt/payara41</containerHome>
                 <testHome>/opt/payara41/test</testHome>
             </properties>
