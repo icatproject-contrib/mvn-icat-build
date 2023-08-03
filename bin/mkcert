@@ -4,7 +4,7 @@ maindir=$(cd $(dirname $0)/..; pwd)
 
 . $maindir/.env
 
-wd=$maindir/build/certs
+wd=$maindir/build/image/certs
 mkdir -p $wd
 cd $wd
 

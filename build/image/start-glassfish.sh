@@ -27,23 +27,8 @@ glassfish_init() {
 		-keystore $DOMAINDIR/config/cacerts.jks -storetype jks \
 		-storepass changeit \
 		-noprompt
-	# Check whether the root ca is already in cacerts.jks and add
-	# it if needed.
-	rootfp=`openssl x509 -in $certsdir/rootcert.pem \
-                    -noout -sha256 -fingerprint | cut -d '=' -f 2 -s`
-	if ! (keytool -list -keystore $DOMAINDIR/config/cacerts.jks \
-	          -storetype jks -storepass changeit \
-	          | grep -q $rootfp); then
-	    echo "Import root cert to cacerts.jks"
-	    # Choose a random alias for the new ca entry that is very
-	    # unlikely to collide with an already existing one.
-	    alias=`pwgen 32 1`
-	    openssl x509 -in $certsdir/rootcert.pem -outform der -out $tmpfile
-	    keytool -import -file $tmpfile -alias $alias \
-		-keystore $DOMAINDIR/config/cacerts.jks -storetype jks \
-		-storepass changeit \
-		-noprompt
-	fi
+	add-cert-truststore.sh \
+	    $DOMAINDIR/config/cacerts.jks $certsdir/rootcert.pem local-payara
 	echo "Import cert.pem to keystore.jks"
 	if [ -f $certsdir/certchain.pem ]; then
 	    openssl pkcs12 -export -chain \

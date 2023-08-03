@@ -1,8 +1,8 @@
 /.env
 /build/apps
-/build/certs/cert.pem
-/build/certs/certchain.pem
-/build/certs/key.pem
-/build/certs/openssl.cnf
-/build/certs/rootcert.pem
+/build/image/certs/cert.pem
+/build/image/certs/certchain.pem
+/build/image/certs/key.pem
+/build/image/certs/openssl.cnf
+/build/image/certs/rootcert.pem
 /build/src

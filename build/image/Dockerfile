@@ -35,13 +35,20 @@ RUN groupadd abuild && \
 	/opt/payara41/test/data/ids/cache \
 	/opt/payara41/test/data/ids/main
 
+COPY add-cert-truststore.sh /usr/local/bin/
+COPY certs /opt/payara41/certs
 COPY start-glassfish.sh /opt/payara41/bin
 COPY add-test-accounts.sh /opt/payara41/bin
 
 RUN chmod 0755 \
+	/usr/local/bin/add-cert-truststore.sh \
 	/opt/payara41/bin/add-test-accounts.sh \
 	/opt/payara41/bin/start-glassfish.sh && \
-    chown -R abuild:abuild /home/abuild /opt/payara41
+    chown -R abuild:abuild /home/abuild /opt/payara41 && \
+    add-cert-truststore.sh \
+	/var/lib/ca-certificates/java-cacerts \
+	/opt/payara41/certs/rootcert.pem \
+	local-payara
 
 USER abuild
 
