@@ -1,0 +1,94 @@
+#! /usr/bin/python3
+
+import argparse
+import os
+from pathlib import Path
+from shutil import copyfile
+from socket import getfqdn
+import subprocess
+from tempfile import mkdtemp
+
+maindir = Path(__file__).resolve().parent.parent
+env_file = maindir / '.env'
+home_src_dir = maindir / 'build' / 'home'
+glassfish_home = Path('/opt/payara6')
+
+argparser = argparse.ArgumentParser(
+    description="setup build home directory and docker environment"
+)
+argparser.add_argument("--repo-user",
+                       dest="user",
+                       help="username at repo.icatproject.org")
+args = argparser.parse_args()
+
+try:
+    ssh_auth_sock = os.environ['SSH_AUTH_SOCK']
+except KeyError:
+    # Create a dummy SSH agent directory to make the compose file happy
+    ssh_auth_dir = mkdtemp(prefix="ssh-")
+    ssh_auth_sock = ""
+else:
+    ssh_auth_dir = str(Path(ssh_auth_sock).parent)
+
+def mkhome(user):
+    home_files = [
+        ('bashrc', '.bashrc'),
+        ('m2-settings.xml', '.m2/settings.xml'),
+        ('my.cnf', '.my.cnf'),
+        ('ssh-config', '.ssh/config'),
+        ('ssh-host-github', '.ssh/known_hosts'),
+    ]
+    user_run_dir = Path("/run/user") / str(os.getuid())
+    if user_run_dir.is_dir():
+        home = user_run_dir / "mvn-icat-build"
+        home.mkdir(mode=0o700, exist_ok=True)
+    else:
+        home = mkdtemp(prefix="mvn-icat-build-")
+    if not any(home.iterdir()):
+        (home / '.m2').mkdir()
+        (home / '.ssh').mkdir(mode=0o700)
+        for src, dest in home_files:
+            copyfile(str(home_src_dir / src), str(home / dest))
+        gitconfig = Path.home() / '.gitconfig'
+        if gitconfig.exists():
+            copyfile(str(gitconfig), str(home / '.gitconfig'))
+        (home / 'bin').symlink_to(glassfish_home / 'bin')
+        try:
+            lt = Path('/etc/localtime')
+            zi = Path('/usr/share/zoneinfo/')
+            tzname = str(lt.resolve().relative_to(zi))
+        except ValueError:
+            pass
+        else:
+            with (home / '.bashrc').open('at') as f:
+                print("export TZ=%s" % tzname, file=f)
+    if user:
+        # Substitute username and password in .m2/settings.xml.
+        # Import keyring here, so that the rest of the script does not
+        # depend on that third party package.
+        import string
+        import keyring
+        src = home_src_dir / 'm2-settings.xml'
+        dest = home / '.m2/settings.xml'
+        subst = {
+            'user': user,
+            'pass': keyring.get_password("repo.icatproject.org", user),
+        }
+        with src.open('rt') as inf, dest.open('wt') as outf:
+            outf.write(string.Template(inf.read()).substitute(subst))
+    subprocess.run(['sudo', 'chown', '-R', '1000:1000', str(home)], check=True)
+    return home
+
+cfg = {
+    'COMPOSE_FILE': 'compose.yaml',
+    'COMPOSE_PROJECT_NAME': 'mvn',
+    'BUILDHOME': mkhome(args.user),
+    'GLASSFISH_HOME': glassfish_home,
+    'HOSTNAME': getfqdn(),
+    'SSH_AUTH_DIR': ssh_auth_dir,
+    'SSH_AUTH_SOCK': ssh_auth_sock,
+}
+
+with env_file.open('wt') as f:
+    for k in cfg:
+        print("%s=%s" % (k, cfg[k]), file=f)
