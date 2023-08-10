@@ -16,13 +16,11 @@ glassfish_init() {
     rm -f $pwfile
     ln -s /usr/share/java/mysql-connector-java.jar $DOMAINDIR/lib
     if [ -d $certsdir ]; then
-	# The certs directory is present, e.g. it has been added by a
-	# bind mount.  It contains the SSL certificate we should use.
-	# Add the certificate to Glassfish's keystore, overwriting the
-	# self-signed certificate that Glassfish created during
-	# create-domain.
+	# Add the certificate from $certsdir to Payara's keystore,
+	# overwriting the self-signed certificate that Payara created
+	# during create-domain.
 	tmpfile=`mktemp`
-	# Remove the self-signed certificate from Glassfish's cacerts.jks.
+	# Remove the self-signed certificate from Payara's cacerts.jks.
 	keytool -delete -alias s1as \
 		-keystore $DOMAINDIR/config/cacerts.jks -storetype jks \
 		-storepass changeit \
