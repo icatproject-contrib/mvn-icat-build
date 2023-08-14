@@ -6,7 +6,7 @@ RUN zypper --non-interactive install \
 	acl \
 	git \
 	glibc-locale \
-	java-11-openjdk-devel \
+	java-11-openjdk-devel-11.0.18.0 \
 	less \
 	mariadb-client \
 	maven \
