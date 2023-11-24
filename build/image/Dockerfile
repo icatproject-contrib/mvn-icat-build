@@ -6,7 +6,7 @@ RUN zypper --non-interactive install \
 	acl \
 	git \
 	glibc-locale \
-	java-11-openjdk-devel-11.0.18.0 \
+	java-11-openjdk-devel \
 	less \
 	mariadb-client \
 	maven \
@@ -52,7 +52,7 @@ WORKDIR $HOME
 
 RUN tmpfile=`mktemp` && \
     curl --silent --show-error --location --output $tmpfile \
-	https://repo1.maven.org/maven2/fish/payara/distributions/payara/6.2023.7/payara-6.2023.7.zip && \
+	https://repo1.maven.org/maven2/fish/payara/distributions/payara/6.2023.9/payara-6.2023.9.zip && \
     unzip -q -d /opt $tmpfile && \
     rm -rf $tmpfile && \
     asadmin delete-domain domain1
