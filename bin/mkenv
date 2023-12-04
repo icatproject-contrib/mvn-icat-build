@@ -43,7 +43,7 @@ def mkhome(user):
         home = user_run_dir / "mvn-icat-build"
         home.mkdir(mode=0o700, exist_ok=True)
     else:
-        home = mkdtemp(prefix="mvn-icat-build-")
+        home = Path(mkdtemp(prefix="mvn-icat-build-"))
     if not any(home.iterdir()):
         (home / '.m2').mkdir()
         (home / '.ssh').mkdir(mode=0o700)
