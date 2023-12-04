@@ -1,12 +1,17 @@
 #! /usr/bin/python3
 
 import argparse
+import logging
 import os
 from pathlib import Path
 from shutil import copyfile
 from socket import getfqdn
 import subprocess
 from tempfile import mkdtemp
+
+logging.basicConfig(level=logging.INFO, format="%(levelname)s: %(message)s")
+logging.getLogger('keyring').setLevel(logging.WARNING)
+log = logging.getLogger(__name__)
 
 maindir = Path(__file__).resolve().parent.parent
 env_file = maindir / '.env'
@@ -44,6 +49,7 @@ def mkhome(user):
         home.mkdir(mode=0o700, exist_ok=True)
     else:
         home = Path(mkdtemp(prefix="mvn-icat-build-"))
+    log.info("create build home in %s", home)
     if not any(home.iterdir()):
         (home / '.m2').mkdir()
         (home / '.ssh').mkdir(mode=0o700)
@@ -68,6 +74,7 @@ def mkhome(user):
         # depend on that third party package.
         import string
         import keyring
+        log.info("add %s credentials to m2-settings.xml", user)
         src = home_src_dir / 'm2-settings.xml'
         dest = home / '.m2/settings.xml'
         subst = {
