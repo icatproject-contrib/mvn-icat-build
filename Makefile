@@ -1,5 +1,4 @@
 CONF_REPO = git@github.com:icatproject-contrib/icat-config.git
-LOCAL_USER = $(shell id -u)
 
 install: build/apps build/src
 
@@ -7,7 +6,7 @@ build: env cert
 	sudo docker-compose pull
 	sudo docker-compose build --pull
 
-up: env set-owner
+up: env
 	sudo docker-compose up -d
 
 down: env
@@ -16,12 +15,6 @@ down: env
 
 run: env up
 	sudo docker-compose exec build bash
-
-set-owner:
-	sudo chown -R '1000:1000' build/apps build/src
-
-reset-owner:
-	sudo chown -R $(LOCAL_USER) build/apps build/src
 
 env:
 	bin/mkenv
@@ -38,4 +31,4 @@ build/apps:
 build/src:
 	mkdir $@
 
-.PHONY: install build up down run set-owner reset-owner env cert
+.PHONY: install build up down run env cert

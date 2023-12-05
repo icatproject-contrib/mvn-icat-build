@@ -14,12 +14,15 @@ RUN zypper --non-interactive install \
 	openssh \
 	unzip
 
+ARG uid
+ARG gid
+
 ENV GLASSFISH_HOME /opt/payara6
 ENV JAVA_HOME /usr/lib64/jvm/java-11-openjdk
 ENV LC_ALL en_US.UTF-8
 
-RUN groupadd abuild && \
-    useradd -g abuild -c "Build user" -d /home/abuild abuild && \
+RUN groupadd -g $gid -o abuild && \
+    useradd -u $uid -g $gid -c "Build user" -d /home/abuild abuild && \
     mkdir -p \
 	/home/abuild \
 	/opt/payara6 \
