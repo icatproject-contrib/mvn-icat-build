@@ -11,6 +11,9 @@ services:
   build:
     build:
       context: ./build/image
+      args:
+        uid: $USERID
+        gid: $GROUPID
     depends_on:
       - mysql
     volumes:

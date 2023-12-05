@@ -17,6 +17,8 @@ maindir = Path(__file__).resolve().parent.parent
 env_file = maindir / '.env'
 home_src_dir = maindir / 'build' / 'home'
 glassfish_home = Path('/opt/payara41')
+uid = str(os.getuid())
+gid = str(os.getgid())
 
 argparser = argparse.ArgumentParser(
     description="setup build home directory and docker environment"
@@ -43,7 +45,7 @@ def mkhome(user):
         ('ssh-config', '.ssh/config'),
         ('ssh-host-github', '.ssh/known_hosts'),
     ]
-    user_run_dir = Path("/run/user") / str(os.getuid())
+    user_run_dir = Path("/run/user") / uid
     if user_run_dir.is_dir():
         home = user_run_dir / "mvn-icat-build"
         home.mkdir(mode=0o700, exist_ok=True)
@@ -83,7 +85,6 @@ def mkhome(user):
         }
         with src.open('rt') as inf, dest.open('wt') as outf:
             outf.write(string.Template(inf.read()).substitute(subst))
-    subprocess.run(['sudo', 'chown', '-R', '1000:1000', str(home)], check=True)
     return home
 
 cfg = {
@@ -92,6 +93,8 @@ cfg = {
     'BUILDHOME': mkhome(args.user),
     'GLASSFISH_HOME': glassfish_home,
     'HOSTNAME': getfqdn(),
+    'USERID': uid,
+    'GROUPID': gid,
     'SSH_AUTH_DIR': ssh_auth_dir,
     'SSH_AUTH_SOCK': ssh_auth_sock,
 }
