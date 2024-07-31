@@ -59,7 +59,7 @@ WORKDIR $HOME
 
 RUN tmpfile=`mktemp` && \
     curl --silent --show-error --location --output $tmpfile \
-	https://repo1.maven.org/maven2/fish/payara/distributions/payara/6.2024.1/payara-6.2024.1.zip && \
+	https://repo1.maven.org/maven2/fish/payara/distributions/payara/6.2024.7/payara-6.2024.7.zip && \
     unzip -q -d /opt $tmpfile && \
     rm -rf $tmpfile && \
     asadmin delete-domain domain1
