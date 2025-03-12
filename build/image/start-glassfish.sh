@@ -54,13 +54,13 @@ glassfish_init() {
     asadmin set configs.config.server-config.network-config.protocols.protocol.http-listener-2.http.request-timeout-seconds=-1
 
     mkdir -p \
-	$DOMAINDIR/data/icat \
 	$DOMAINDIR/data/icat/lucene \
-	$DOMAINDIR/data/ids \
+	$DOMAINDIR/data/icat/search \
 	$DOMAINDIR/data/ids/archive \
 	$DOMAINDIR/data/ids/cache \
 	$DOMAINDIR/data/ids/main \
-	$DOMAINDIR/data/lucene
+	$DOMAINDIR/data/lucene \
+	$DOMAINDIR/data/search
 }
 
 if [[ ! -d $DOMAINDIR ]]; then
