@@ -78,6 +78,7 @@ run docker commands.
 
      $ (cd apps/authn.simple && ./setup install)
      $ (cd apps/authn.db && ./setup install)
+     $ (cd apps/authn.anon && ./setup install)
      $ (cd apps/icat.lucene && ./setup install)
 
    Note that you don't need to configure these components to the build
