@@ -17,6 +17,8 @@
       <properties>
         <serverUrl>https://payara:8181</serverUrl>
         <luceneUrl>https://payara:8181</luceneUrl>
+        <searchEngine>LUCENE</searchEngine>
+        <searchUrls>https://payara:8181</searchUrls>
         <containerHome>/opt/payara6</containerHome>
         <testHome>/opt/payara6/test</testHome>
       </properties>
