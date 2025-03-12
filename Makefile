@@ -3,18 +3,18 @@ CONF_REPO = git@github.com:icatproject-contrib/icat-config.git
 install: build/apps build/src
 
 build: env cert
-	sudo docker-compose pull
-	sudo docker-compose build --pull
+	sudo docker compose pull
+	sudo docker compose build --pull
 
 up: env
-	sudo docker-compose up -d
+	sudo docker compose up -d
 
 down: env
-	sudo docker-compose down -v
+	sudo docker compose down -v
 	bash -c '. .env && rm -rf $$BUILDHOME'
 
 run: env up
-	sudo docker-compose exec build bash
+	sudo docker compose exec build bash
 
 env:
 	bin/mkenv
