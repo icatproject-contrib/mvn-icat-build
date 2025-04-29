@@ -8,6 +8,7 @@ export DOMAINDIR
 
 
 glassfish_init() {
+    mkdir -p $GLASSFISH_HOME/glassfish/domains/.gfclient
     adminpw="$(pwgen -s 32 1)"
     pwfile=$(mktemp)
     echo "AS_ADMIN_PASSWORD=${adminpw}" > $pwfile

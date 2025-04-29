@@ -17,6 +17,7 @@ maindir = Path(__file__).resolve().parent.parent
 env_file = maindir / '.env'
 home_src_dir = maindir / 'build' / 'home'
 glassfish_home = Path('/opt/payara6')
+domains_dir = glassfish_home / 'glassfish' / 'domains'
 uid = str(os.getuid())
 gid = str(os.getgid())
 
@@ -61,6 +62,7 @@ def mkhome(user):
         if gitconfig.exists():
             copyfile(str(gitconfig), str(home / '.gitconfig'))
         (home / 'bin').symlink_to(glassfish_home / 'bin')
+        (home / '.gfclient').symlink_to(domains_dir / '.gfclient')
         try:
             lt = Path('/etc/localtime')
             zi = Path('/usr/share/zoneinfo/')
