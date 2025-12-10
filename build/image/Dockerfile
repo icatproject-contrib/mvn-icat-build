@@ -1,28 +1,24 @@
-FROM rkrahl/opensuse:15.5
+FROM rkrahl/opensuse:15.6
 
 RUN zypper --non-interactive refresh
 
-# For some reason not yet fully understood, a recent update of
-# mysql-connector-java seem to break things.  (Incompatibility with
-# Jave 11?)  Pin the package to the last known working version.
 RUN zypper --non-interactive install \
 	acl \
 	git \
 	glibc-locale \
-	java-11-openjdk-devel \
+	java-21-openjdk-devel \
 	less \
 	mariadb-client \
 	maven \
-	'mysql-connector-java < 8.4.0' \
+	mysql-connector-java \
 	openssh \
-	unzip && \
-    zypper --non-interactive addlock mysql-connector-java
+	unzip
 
 ARG uid
 ARG gid
 
 ENV GLASSFISH_HOME /opt/payara6
-ENV JAVA_HOME /usr/lib64/jvm/java-11-openjdk
+ENV JAVA_HOME /usr/lib64/jvm/java-21-openjdk
 ENV LC_ALL en_US.UTF-8
 
 RUN groupadd -g $gid -o abuild && \
